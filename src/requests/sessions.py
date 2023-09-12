@@ -57,6 +57,17 @@ if sys.platform == "win32":
 else:
     preferred_clock = time.time
 
+# ------
+DEFAULT_PROXIES = None
+
+if os.getenv("HTTP_PROXY") or os.getenv("HTTPS_PROXY"):
+    DEFAULT_PROXIES = {}
+    if os.getenv("HTTP_PROXY"):
+        DEFAULT_PROXIES['http'] = os.getenv("HTTP_PROXY")
+    if os.getenv("HTTPS_PROXY"):
+        DEFAULT_PROXIES['https'] = os.getenv("HTTPS_PROXY")
+
+# ------
 
 def merge_setting(request_setting, session_setting, dict_class=OrderedDict):
     """Determines appropriate setting for a given request, taking into account
@@ -509,7 +520,7 @@ class Session(SessionRedirectMixin):
         auth=None,
         timeout=None,
         allow_redirects=True,
-        proxies=None,
+        proxies=DEFAULT_PROXIES,
         hooks=None,
         stream=None,
         verify=None,
